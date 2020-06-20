@@ -1,6 +1,7 @@
 package com.kablanfatih.issuemanagement.service;
 
 import com.kablanfatih.issuemanagement.dto.IssueDto;
+import com.kablanfatih.issuemanagement.entity.Issue;
 import com.kablanfatih.issuemanagement.util.TPage;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +14,6 @@ public interface IssueService {
     TPage<IssueDto> getAllPageable(Pageable pageable);
 
     Boolean delete(Long id);
+
+    IssueDto update(Long id, IssueDto project);
 }

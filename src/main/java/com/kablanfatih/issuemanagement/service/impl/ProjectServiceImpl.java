@@ -1,9 +1,11 @@
 package com.kablanfatih.issuemanagement.service.impl;
 
+import com.kablanfatih.issuemanagement.dto.ProjectDto;
 import com.kablanfatih.issuemanagement.entity.Project;
 import com.kablanfatih.issuemanagement.repository.ProjectRepository;
 import com.kablanfatih.issuemanagement.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,22 +17,31 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public Project save(Project project) {
-        if (project == null) {
-            throw new IllegalArgumentException("Project Code cannot be null");
+    public ProjectDto save(ProjectDto projectDto) {
+
+        Project checkProject = projectRepository.getByProjectCode(projectDto.getProjectCode());
+
+        if (checkProject != null){
+            throw new IllegalArgumentException("Not Unique");
         }
-        return projectRepository.save(project);
+
+        Project project = modelMapper.map(projectDto, Project.class);
+        project =  projectRepository.save(project);
+        projectDto.setId(project.getId());
+        return projectDto;
     }
 
     @Override
-    public Project getById(Long id) {
-        return projectRepository.getOne(id);
+    public ProjectDto getById(Long id) {
+        Project p = projectRepository.getOne(id);
+        return modelMapper.map(p, ProjectDto.class);
     }
 
     @Override
-    public List<Project> getByProjectCode(String projectCode) {
+    public Project getByProjectCode(String projectCode) {
         return projectRepository.getByProjectCode(projectCode);
     }
 
@@ -48,5 +59,22 @@ public class ProjectServiceImpl implements ProjectService {
     public Boolean delete(Long id) {
         projectRepository.deleteById(id);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public ProjectDto update(Long id, ProjectDto projectDto) {
+        Project projectDb = projectRepository.getOne(id);
+        if (projectDb == null)
+            throw new IllegalArgumentException("Project Does Not Exist ID:" + id);
+
+        Project projectCheck = projectRepository.getByProjectCodeAndIdNot(projectDto.getProjectCode(), id);
+        if (projectCheck != null)
+            throw new IllegalArgumentException("Project Code Already Exist");
+
+        projectDb.setProjectCode(projectDto.getProjectCode());
+        projectDb.setProjectName(projectDto.getProjectName());
+
+        projectRepository.save(projectDb);
+        return modelMapper.map(projectDb, ProjectDto.class);
     }
 }
