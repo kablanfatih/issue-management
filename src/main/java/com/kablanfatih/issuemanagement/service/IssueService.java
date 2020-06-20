@@ -1,7 +1,6 @@
 package com.kablanfatih.issuemanagement.service;
 
 import com.kablanfatih.issuemanagement.dto.IssueDto;
-import com.kablanfatih.issuemanagement.entity.Issue;
 import com.kablanfatih.issuemanagement.util.TPage;
 import org.springframework.data.domain.Pageable;
 
