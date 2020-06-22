@@ -1,0 +1,17 @@
+[
+  {
+    "_class": "com.kablanfatih.issuemanagement.entity.Project",
+    "projectCode": "Test1",
+    "projectName": "Test1Name"
+  },
+  {
+    "_class": "com.kablanfatih.issuemanagement.entity.Project",
+    "projectCode": "Test2",
+    "projectName": "Test2Name"
+  },
+  {
+    "_class": "com.kablanfatih.issuemanagement.entity.Project",
+    "projectCode": "Test3",
+    "projectName": "Test3Name"
+  }
+]
