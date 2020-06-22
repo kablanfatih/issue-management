@@ -4,12 +4,14 @@ import com.kablanfatih.issuemanagement.dto.ProjectDto;
 import com.kablanfatih.issuemanagement.entity.Project;
 import com.kablanfatih.issuemanagement.repository.ProjectRepository;
 import com.kablanfatih.issuemanagement.service.ProjectService;
+import com.kablanfatih.issuemanagement.util.TPage;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,12 +26,12 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project checkProject = projectRepository.getByProjectCode(projectDto.getProjectCode());
 
-        if (checkProject != null){
+        if (checkProject != null) {
             throw new IllegalArgumentException("Not Unique");
         }
 
         Project project = modelMapper.map(projectDto, Project.class);
-        project =  projectRepository.save(project);
+        project = projectRepository.save(project);
         projectDto.setId(project.getId());
         return projectDto;
     }
@@ -51,8 +53,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Page<Project> getAllPageable(Pageable pageable) {
-        return getAllPageable(pageable);
+    public TPage<ProjectDto> getAllPageable(Pageable pageable) {
+        Page<Project> data = projectRepository.findAll(pageable);
+        TPage<ProjectDto> response = new TPage<ProjectDto>();
+        response.setStat(data, Arrays.asList(modelMapper.map(data.getContent(), ProjectDto[].class)));
+        return response;
     }
 
     @Override
