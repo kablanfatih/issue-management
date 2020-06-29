@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@Table(name = "users")
+@Table(name = "users", indexes = {@Index(name = "idx_uname", columnList = "uname")})
 public class User extends BaseEntity{
 
     @Id
